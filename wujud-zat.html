@@ -1,0 +1,2072 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Petualangan Wujud Zat - Media Pembelajaran Kelas 4 SD/MI</title>
+    <!-- Tailwind CSS CDN -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts Nunito & Fredoka for playful child-friendly typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&family=Nunito:wght@400;600;700;800&display=swap" rel="stylesheet">
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                        display: ['Fredoka', 'cursive'],
+                    },
+                    colors: {
+                        brand: {
+                            blue: '#3B82F6',
+                            teal: '#0D9488',
+                            amber: '#F59E0B',
+                            coral: '#F97316',
+                            purple: '#8B5CF6',
+                            pink: '#EC4899',
+                            bg: '#F0F9FF'
+                        }
+                    },
+                    boxShadow: {
+                        'fun': '0 10px 0px 0px rgba(0, 0, 0, 0.08)',
+                        'fun-sm': '0 5px 0px 0px rgba(0, 0, 0, 0.06)',
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #F0F9FF;
+            background-image: radial-gradient(#BAE6FD 1.5px, transparent 1.5px);
+            background-size: 24px 24px;
+            color: #1E293B;
+            min-height: 100vh;
+        }
+
+        h1, h2, h3, h4, .font-fun {
+            font-family: 'Fredoka', cursive;
+        }
+
+        .animate-bounce-slow {
+            animation: bounce 3s infinite;
+        }
+
+        .animate-pulse-glow {
+            animation: pulseGlow 2s infinite alternate;
+        }
+
+        @keyframes pulseGlow {
+            0% { transform: scale(1); filter: drop-shadow(0 0 5px rgba(59, 130, 246, 0.4)); }
+            100% { transform: scale(1.03); filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.8)); }
+        }
+
+        .card-hover {
+            transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .card-hover:hover {
+            transform: translateY(-6px) scale(1.02);
+        }
+
+        /* Custom Drag and Drop styling */
+        .draggable-item {
+            cursor: grab;
+            user-select: none;
+            touch-action: none;
+        }
+        .draggable-item:active {
+            cursor: grabbing;
+        }
+
+        .dropzone-active {
+            border-color: #3B82F6 !important;
+            background-color: #EFF6FF !important;
+        }
+
+        /* Custom scrollbar for elementary readability */
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #E0F2FE;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #3B82F6;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2563EB;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen antialiased selection:bg-amber-200 selection:text-amber-900">
+
+    <!-- TOP NAVIGATION BAR -->
+    <header id="mainHeader" class="hidden sticky top-0 z-40 bg-white/90 backdrop-blur-md border-b-4 border-sky-200 shadow-sm transition-all">
+        <div class="max-w-6xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center space-x-3 cursor-pointer" onclick="navigateTo('dashboard')">
+                <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-blue-500 to-teal-400 flex items-center justify-center text-white shadow-md transform -rotate-3">
+                    <i data-lucide="flask-conical" class="w-6 h-6"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold text-sky-900 leading-none">Sains Cilik</h1>
+                    <span class="text-xs text-teal-600 font-semibold tracking-wide">Petualangan Wujud Zat</span>
+                </div>
+            </div>
+
+            <!-- Student Profile & Sound Toggle -->
+            <div class="flex items-center space-x-3">
+                <button onclick="toggleAudio()" id="audioBtn" class="p-2 rounded-xl bg-amber-100 text-amber-700 hover:bg-amber-200 transition font-bold text-sm flex items-center gap-1 shadow-sm" title="Suara Efek">
+                    <i data-lucide="volume-2" id="audioIcon" class="w-5 h-5"></i>
+                </button>
+
+                <div class="hidden sm:flex items-center bg-sky-50 px-3 py-1.5 rounded-2xl border-2 border-sky-200">
+                    <div class="w-7 h-7 rounded-full bg-blue-500 text-white flex items-center justify-center font-bold text-xs mr-2" id="navAvatar">
+                        S
+                    </div>
+                    <div>
+                        <div class="text-xs font-bold text-sky-900 leading-tight" id="navStudentName">Siswa</div>
+                        <div class="text-[10px] text-sky-600 font-semibold" id="navStudentClass">Kelas 4</div>
+                    </div>
+                </div>
+
+                <button onclick="navigateTo('dashboard')" class="bg-sky-500 hover:bg-sky-600 text-white font-bold px-3 py-1.5 rounded-xl shadow-fun-sm text-sm transition flex items-center gap-1">
+                    <i data-lucide="home" class="w-4 h-4"></i>
+                    <span class="hidden md:inline">Menu Utama</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="flex-grow max-w-6xl w-full mx-auto px-4 py-6">
+
+        <!-- ================= PAGE 1: LOGIN / START PAGE ================= -->
+        <section id="pageLogin" class="min-h-[80vh] flex flex-col justify-center items-center">
+            <div class="w-full max-w-md bg-white rounded-3xl p-8 border-4 border-sky-300 shadow-xl relative overflow-hidden text-center">
+                <div class="absolute -top-10 -right-10 w-28 h-28 bg-amber-200 rounded-full blur-xl opacity-70"></div>
+                <div class="absolute -bottom-10 -left-10 w-28 h-28 bg-teal-200 rounded-full blur-xl opacity-70"></div>
+
+                <!-- Mascot / Hero SVG -->
+                <div class="w-32 h-32 mx-auto mb-4 relative flex items-center justify-center bg-sky-100 rounded-full border-4 border-sky-200 shadow-inner">
+                    <svg class="w-24 h-24 animate-bounce-slow" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Beaker Kid Mascot -->
+                        <path d="M35 20 H65 V35 L80 80 C82 86 78 90 70 90 H30 C22 90 18 86 20 80 L35 35 Z" fill="#E0F2FE" stroke="#0284C7" stroke-width="4" stroke-linejoin="round"/>
+                        <path d="M22 75 L78 75 C72 88 28 88 22 75 Z" fill="#38BDF8"/>
+                        <circle cx="40" cy="55" r="4" fill="#0369A1"/>
+                        <circle cx="60" cy="55" r="4" fill="#0369A1"/>
+                        <path d="M45 65 Q50 70 55 65" stroke="#0369A1" stroke-width="3" stroke-linecap="round"/>
+                        <circle cx="35" cy="40" r="3" fill="white" opacity="0.8"/>
+                        <circle cx="65" cy="45" r="2" fill="white" opacity="0.8"/>
+                        <!-- Bubbles -->
+                        <circle cx="50" cy="25" r="5" fill="#7DD3FC" class="animate-ping" style="animation-duration: 2s;"/>
+                        <circle cx="42" cy="15" r="3" fill="#38BDF8"/>
+                    </svg>
+                </div>
+
+                <h1 class="text-3xl font-extrabold text-sky-900 mb-1">Petualangan Wujud Zat</h1>
+                <p class="text-sky-600 font-semibold text-sm mb-6">Media Pembelajaran Interaktif IPAS Kelas IV SD/MI</p>
+
+                <!-- Login Form -->
+                <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4 text-left">
+                    <div>
+                        <label for="studentName" class="block text-xs font-bold text-sky-800 uppercase tracking-wider mb-1">Nama Lengkap Siswa</label>
+                        <div class="relative">
+                            <input type="text" id="studentName" required placeholder="Contoh: Budi Santoso" class="w-full px-4 py-3 pl-10 rounded-2xl border-2 border-sky-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none font-semibold text-sky-900 transition">
+                            <i data-lucide="user" class="w-5 h-5 text-sky-400 absolute left-3 top-3.5"></i>
+                        </div>
+                    </div>
+
+                    <div>
+                        <label for="studentClass" class="block text-xs font-bold text-sky-800 uppercase tracking-wider mb-1">Kelas / SD</label>
+                        <div class="relative">
+                            <select id="studentClass" required class="w-full px-4 py-3 pl-10 rounded-2xl border-2 border-sky-200 focus:border-sky-500 focus:ring-4 focus:ring-sky-100 outline-none font-semibold text-sky-900 transition appearance-none bg-white">
+                                <option value="IV A">Kelas IV A</option>
+                                <option value="IV B">Kelas IV B</option>
+                                <option value="IV C">Kelas IV C</option>
+                                <option value="IV SD">Kelas IV SD/MI</option>
+                            </select>
+                            <i data-lucide="graduation-cap" class="w-5 h-5 text-sky-400 absolute left-3 top-3.5"></i>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="w-full py-4 bg-gradient-to-r from-teal-500 to-sky-500 hover:from-teal-600 hover:to-sky-600 text-white font-extrabold text-lg rounded-2xl shadow-fun transition transform active:scale-95 flex items-center justify-center gap-2 mt-4">
+                        <span>Mulai Belajar</span>
+                        <i data-lucide="rocket" class="w-6 h-6"></i>
+                    </button>
+                </form>
+
+                <div class="mt-6 pt-4 border-t border-sky-100 flex justify-center items-center gap-2 text-xs text-sky-500">
+                    <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                    <span>Sesuai Kurikulum Merdeka IPAS Fase B</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 2: DASHBOARD ================= -->
+        <section id="pageDashboard" class="hidden space-y-6">
+            <!-- Welcome Banner -->
+            <div class="bg-gradient-to-r from-sky-500 via-teal-500 to-emerald-500 rounded-3xl p-6 md:p-8 text-white shadow-lg relative overflow-hidden">
+                <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-white/10 rounded-full blur-2xl"></div>
+                <div class="relative z-10 flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+                    <div>
+                        <div class="inline-flex items-center gap-2 bg-white/20 backdrop-blur-md px-3 py-1 rounded-full text-xs font-bold mb-2">
+                            <i data-lucide="smile" class="w-4 h-4"></i>
+                            <span>Halo Detektif Sains!</span>
+                        </div>
+                        <h2 class="text-2xl md:text-3xl font-extrabold" id="dashGreeting">Selamat Datang, Siswa!</h2>
+                        <p class="text-sky-100 text-sm max-w-xl mt-1">Mari jelajahi rahasia wujud zat padat, cair, gas, dan perubahan wujudnya di sekitar kita!</p>
+                    </div>
+
+                    <!-- Overall Progress Card -->
+                    <div class="w-full md:w-64 bg-white/15 backdrop-blur-md rounded-2xl p-4 border border-white/30 text-center">
+                        <div class="flex justify-between items-center text-xs font-bold mb-1">
+                            <span>Kemajuan Belajar</span>
+                            <span id="overallPercent">0%</span>
+                        </div>
+                        <div class="w-full bg-black/20 rounded-full h-3 overflow-hidden p-0.5">
+                            <div id="overallProgressBar" class="bg-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+                        </div>
+                        <div class="text-[11px] text-sky-100 mt-2 flex justify-between">
+                            <span id="materiProgressText">Materi: 0/12</span>
+                            <span id="activityProgressText">Aktivitas: 0/4</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Learning Objectives Summary -->
+            <div class="bg-white rounded-2xl p-5 border-2 border-sky-100 shadow-sm">
+                <h3 class="text-lg font-bold text-sky-900 mb-3 flex items-center gap-2">
+                    <i data-lucide="target" class="w-5 h-5 text-coral"></i>
+                    <span>Tujuan Pembelajaran Hari Ini:</span>
+                </h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 text-xs font-semibold text-sky-800">
+                    <div class="flex items-center gap-2 bg-sky-50 p-2.5 rounded-xl border border-sky-100">
+                        <span class="w-6 h-6 rounded-full bg-sky-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">1</span>
+                        <span>Memahami wujud zat padat, cair, dan gas.</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-teal-50 p-2.5 rounded-xl border border-teal-100">
+                        <span class="w-6 h-6 rounded-full bg-teal-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">2</span>
+                        <span>Mengenali sifat & karakteristik tiap zat.</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-amber-50 p-2.5 rounded-xl border border-amber-100">
+                        <span class="w-6 h-6 rounded-full bg-amber-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">3</span>
+                        <span>Menganalisis 6 jenis perubahan wujud.</span>
+                    </div>
+                    <div class="flex items-center gap-2 bg-purple-50 p-2.5 rounded-xl border border-purple-100">
+                        <span class="w-6 h-6 rounded-full bg-purple-500 text-white flex items-center justify-center font-bold text-xs flex-shrink-0">4</span>
+                        <span>Menyelesaikan tantangan kuis HOTS sains.</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Menu Grid (6 Cards) -->
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+                <!-- Menu 1: Materi -->
+                <div onclick="navigateTo('materi')" class="card-hover bg-white rounded-3xl p-6 border-4 border-blue-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-blue-100 text-blue-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="book-open" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">1. Modul Materi</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Pelajari 12 topik menarik wujud zat beserta contoh nyata dan kuis mini.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-blue-600">
+                        <span>Buka Materi</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Menu 2: Aktivitas -->
+                <div onclick="navigateTo('aktivitas')" class="card-hover bg-white rounded-3xl p-6 border-4 border-teal-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-teal-100 text-teal-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="gamepad-2" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">2. Aktivitas Belajar</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Kelompokkan benda, cocokkan peristiwa, dan selesaikan tantangan "Ayo Berpikir".</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-teal-600">
+                        <span>Mulai Aktivitas</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Menu 3: Kuis -->
+                <div onclick="navigateTo('kuis')" class="card-hover bg-white rounded-3xl p-6 border-4 border-amber-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-amber-100 text-amber-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="award" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">3. Kuis Evaluasi</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Uji pemahamanmu dengan 10 soal pilihan ganda HOTS kontekstual.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-amber-600">
+                        <span>Kerjakan Kuis</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Menu 4: Hasil Belajar -->
+                <div onclick="navigateTo('hasil')" class="card-hover bg-white rounded-3xl p-6 border-4 border-purple-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-purple-100 text-purple-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="bar-chart-3" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">4. Hasil Belajar</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Lihat nilai kuis, statistik ketepatan jawaban, dan sertifikat nilai.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-purple-600">
+                        <span>Lihat Nilai</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Menu 5: Petunjuk -->
+                <div onclick="navigateTo('petunjuk')" class="card-hover bg-white rounded-3xl p-6 border-4 border-sky-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-sky-100 text-sky-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="compass" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">5. Petunjuk Penggunaan</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Panduan mudah langkah demi langkah untuk menggunakan media ini.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-sky-600">
+                        <span>Baca Panduan</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+
+                <!-- Menu 6: Tentang -->
+                <div onclick="navigateTo('tentang')" class="card-hover bg-white rounded-3xl p-6 border-4 border-rose-200 shadow-fun cursor-pointer group flex flex-col justify-between">
+                    <div>
+                        <div class="w-14 h-14 rounded-2xl bg-rose-100 text-rose-600 flex items-center justify-center mb-4 group-hover:scale-110 transition">
+                            <i data-lucide="info" class="w-8 h-8"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-sky-900 mb-1">6. Tentang Media</h3>
+                        <p class="text-sky-600 text-xs leading-relaxed">Informasi sasaran, pengembang, dan kurikulum IPAS SD/MI.</p>
+                    </div>
+                    <div class="mt-4 pt-3 border-t border-sky-100 flex justify-between items-center text-xs font-bold text-rose-600">
+                        <span>Informasi</span>
+                        <i data-lucide="arrow-right" class="w-4 h-4 group-hover:translate-x-1 transition"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 3: MATERI ================= -->
+        <section id="pageMateri" class="hidden space-y-6">
+            <!-- Header & Material Topic Selector -->
+            <div class="bg-white rounded-3xl p-5 border-2 border-sky-200 shadow-sm flex flex-col md:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-sky-100 text-sky-700 hover:bg-sky-200">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-sky-900">Modul Pembelajaran Wujud Zat</h2>
+                        <p class="text-xs text-sky-600">Pilih topik materi di bawah atau tekan tombol Berikutnya</p>
+                    </div>
+                </div>
+
+                <!-- Topic Selector Dropdown -->
+                <select id="materiSelect" onchange="loadMateri(parseInt(this.value))" class="w-full md:w-64 px-3 py-2 rounded-xl border-2 border-sky-300 font-bold text-xs text-sky-900 bg-sky-50 focus:outline-none">
+                    <!-- Javascript populated -->
+                </select>
+            </div>
+
+            <!-- Material Card Container -->
+            <div class="bg-white rounded-3xl border-4 border-sky-200 shadow-lg overflow-hidden grid grid-cols-1 md:grid-cols-12 min-h-[420px]">
+                
+                <!-- Left Column: SVG Illustration & Badges -->
+                <div class="md:col-span-5 bg-gradient-to-b from-sky-50 to-teal-50 p-6 flex flex-col items-center justify-center text-center border-b md:border-b-0 md:border-r border-sky-100 relative">
+                    <span id="materiBadge" class="px-3 py-1 bg-amber-400 text-amber-950 font-bold text-xs rounded-full shadow-sm mb-4">
+                        Topik 1 dari 12
+                    </span>
+
+                    <div id="materiSvgContainer" class="w-48 h-48 my-2 flex items-center justify-center">
+                        <!-- Dynamic SVG 삽입 -->
+                    </div>
+
+                    <div id="materiExtraBadge" class="mt-4 px-3 py-1.5 bg-sky-200/60 text-sky-900 rounded-xl text-xs font-semibold">
+                        Sifat Zat
+                    </div>
+                </div>
+
+                <!-- Right Column: Content & Quiz -->
+                <div class="md:col-span-7 p-6 md:p-8 flex flex-col justify-between space-y-4">
+                    <div>
+                        <h3 id="materiTitle" class="text-2xl font-extrabold text-sky-900 mb-2">1. Pengertian Zat</h3>
+                        <p id="materiDesc" class="text-slate-700 text-sm leading-relaxed mb-4">
+                            Zat adalah segala sesuatu yang memiliki massa dan menempati ruang...
+                        </p>
+
+                        <!-- Characteristics List -->
+                        <div id="materiCharacteristicsBox" class="bg-sky-50 p-4 rounded-2xl border border-sky-100 mb-4 hidden">
+                            <h4 class="text-xs font-bold text-sky-800 uppercase tracking-wider mb-2">Ciri-Ciri Utama:</h4>
+                            <ul id="materiCharacteristicsList" class="text-xs text-sky-900 space-y-1 list-disc list-inside"></ul>
+                        </div>
+
+                        <!-- Daily Life Example -->
+                        <div class="bg-amber-50 border-l-4 border-amber-400 p-3.5 rounded-r-2xl text-xs">
+                            <strong class="text-amber-900 block mb-1 flex items-center gap-1">
+                                <i data-lucide="lightbulb" class="w-4 h-4 text-amber-500"></i>
+                                Contoh dalam Kehidupan Sehari-hari:
+                            </strong>
+                            <p id="materiExample" class="text-amber-950">Batu, air minum, dan udara di dalam balon.</p>
+                        </div>
+                    </div>
+
+                    <!-- Interactive Quick Quiz: "Ayo Cek Pemahaman" -->
+                    <div class="bg-teal-50 border-2 border-teal-200 rounded-2xl p-4 text-xs">
+                        <div class="flex items-center gap-2 mb-2 text-teal-900 font-bold">
+                            <i data-lucide="help-circle" class="w-4 h-4 text-teal-600"></i>
+                            <span>Ayo Cek Pemahaman!</span>
+                        </div>
+                        <p id="quickQuizQuestion" class="text-slate-800 font-semibold mb-3">Pertanyaan akan muncul di sini...</p>
+                        
+                        <div id="quickQuizOptions" class="grid grid-cols-1 sm:grid-cols-2 gap-2 mb-2">
+                            <!-- Options rendered dynamically -->
+                        </div>
+
+                        <div id="quickQuizFeedback" class="hidden p-2.5 rounded-xl font-bold text-center mt-2 transition"></div>
+                    </div>
+
+                    <!-- Navigation Footer -->
+                    <div class="flex items-center justify-between pt-4 border-t border-sky-100">
+                        <button id="prevMateriBtn" onclick="prevMateri()" class="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-1 transition">
+                            <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                            <span>Sebelumnya</span>
+                        </button>
+
+                        <span class="text-xs font-bold text-sky-600" id="materiStepIndicator">1 / 12</span>
+
+                        <button id="nextMateriBtn" onclick="nextMateri()" class="px-4 py-2 bg-sky-500 hover:bg-sky-600 text-white font-bold rounded-xl text-xs flex items-center gap-1 shadow-fun-sm transition">
+                            <span>Berikutnya</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 4: AKTIVITAS BELAJAR ================= -->
+        <section id="pageAktivitas" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 border-2 border-teal-200 shadow-sm flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-teal-100 text-teal-700 hover:bg-teal-200">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-teal-900">Aktivitas Belajar Interaktif</h2>
+                        <p class="text-xs text-teal-600">Pilih tantangan aktivitas di bawah ini untuk mengasah keahlianmu!</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Activity Selector Tabs -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 gap-2">
+                <button onclick="switchActivityTab(1)" id="actTab1" class="act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-teal-500 text-white border-teal-600 shadow-sm">
+                    1. Klasifikasi Benda
+                </button>
+                <button onclick="switchActivityTab(2)" id="actTab2" class="act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-white text-teal-800 border-teal-200 hover:bg-teal-50">
+                    2. Jodohkan Peristiwa
+                </button>
+                <button onclick="switchActivityTab(3)" id="actTab3" class="act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-white text-teal-800 border-teal-200 hover:bg-teal-50">
+                    3. Detektif Gambar
+                </button>
+                <button onclick="switchActivityTab(4)" id="actTab4" class="act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-white text-teal-800 border-teal-200 hover:bg-teal-50">
+                    4. Ayo Berpikir!
+                </button>
+            </div>
+
+            <!-- ACTIVITY 1: Categorize Items -->
+            <div id="activitySection1" class="bg-white rounded-3xl p-6 border-4 border-teal-200 shadow-lg space-y-4">
+                <div class="bg-teal-50 p-4 rounded-2xl border border-teal-100">
+                    <h3 class="font-extrabold text-teal-900 text-base mb-1">Aktivitas 1: Kelompokkan Benda Berdasarkan Wujudnya!</h3>
+                    <p class="text-xs text-teal-700">Klik nama benda di bawah ini, lalu klik kotak wujud zat (Padat, Cair, atau Gas) yang sesuai.</p>
+                </div>
+
+                <!-- Unsorted Items Tags -->
+                <div id="act1UnsortedBox" class="flex flex-wrap gap-2 p-4 bg-sky-50 rounded-2xl border-2 border-dashed border-sky-200 min-h-[70px] items-center">
+                    <!-- Javascript populated tags -->
+                </div>
+
+                <!-- Target Category Boxes -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                    <!-- Padat -->
+                    <div onclick="placeAct1Item('padat')" class="dropzone p-4 bg-amber-50 rounded-2xl border-2 border-amber-300 min-h-[160px] flex flex-col justify-start items-center text-center cursor-pointer hover:bg-amber-100/60 transition">
+                        <div class="flex items-center gap-2 text-amber-900 font-extrabold text-sm mb-2">
+                            <i data-lucide="box" class="w-5 h-5 text-amber-600"></i>
+                            <span>Zat Padat</span>
+                        </div>
+                        <div id="act1TargetPadat" class="w-full flex flex-wrap justify-center gap-1.5"></div>
+                    </div>
+
+                    <!-- Cair -->
+                    <div onclick="placeAct1Item('cair')" class="dropzone p-4 bg-blue-50 rounded-2xl border-2 border-blue-300 min-h-[160px] flex flex-col justify-start items-center text-center cursor-pointer hover:bg-blue-100/60 transition">
+                        <div class="flex items-center gap-2 text-blue-900 font-extrabold text-sm mb-2">
+                            <i data-lucide="droplet" class="w-5 h-5 text-blue-600"></i>
+                            <span>Zat Cair</span>
+                        </div>
+                        <div id="act1TargetCair" class="w-full flex flex-wrap justify-center gap-1.5"></div>
+                    </div>
+
+                    <!-- Gas -->
+                    <div onclick="placeAct1Item('gas')" class="dropzone p-4 bg-teal-50 rounded-2xl border-2 border-teal-300 min-h-[160px] flex flex-col justify-start items-center text-center cursor-pointer hover:bg-teal-100/60 transition">
+                        <div class="flex items-center gap-2 text-teal-900 font-extrabold text-sm mb-2">
+                            <i data-lucide="wind" class="w-5 h-5 text-teal-600"></i>
+                            <span>Zat Gas</span>
+                        </div>
+                        <div id="act1TargetGas" class="w-full flex flex-wrap justify-center gap-1.5"></div>
+                    </div>
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="resetActivity1()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">
+                        Ulangi Aktivitas 1
+                    </button>
+                    <button onclick="checkActivity1()" class="px-6 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                        Periksa Jawaban
+                    </button>
+                </div>
+                <div id="act1Feedback" class="hidden p-3 rounded-2xl font-bold text-xs text-center"></div>
+            </div>
+
+            <!-- ACTIVITY 2: Matching -->
+            <div id="activitySection2" class="hidden bg-white rounded-3xl p-6 border-4 border-teal-200 shadow-lg space-y-4">
+                <div class="bg-teal-50 p-4 rounded-2xl border border-teal-100">
+                    <h3 class="font-extrabold text-teal-900 text-base mb-1">Aktivitas 2: Cocokkan Perubahan Wujud Zat</h3>
+                    <p class="text-xs text-teal-700">Pilih jenis perubahan wujud yang tepat untuk setiap peristiwa sehari-hari berikut ini.</p>
+                </div>
+
+                <div id="act2Container" class="space-y-3">
+                    <!-- Javascript populated matching pairs -->
+                </div>
+
+                <div class="flex justify-between items-center pt-2">
+                    <button onclick="resetActivity2()" class="px-4 py-2 bg-slate-200 hover:bg-slate-300 text-slate-700 font-bold text-xs rounded-xl transition">
+                        Ulangi
+                    </button>
+                    <button onclick="checkActivity2()" class="px-6 py-2.5 bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                        Periksa Jawaban
+                    </button>
+                </div>
+                <div id="act2Feedback" class="hidden p-3 rounded-2xl font-bold text-xs text-center"></div>
+            </div>
+
+            <!-- ACTIVITY 3: Image Scenario -->
+            <div id="activitySection3" class="hidden bg-white rounded-3xl p-6 border-4 border-teal-200 shadow-lg space-y-4">
+                <div class="bg-teal-50 p-4 rounded-2xl border border-teal-100">
+                    <h3 class="font-extrabold text-teal-900 text-base mb-1">Aktivitas 3: Detektif Gambar Perubahan Wujud</h3>
+                    <p class="text-xs text-teal-700">Amati peristiwa dalam ilustrasi di bawah ini, lalu tentukan perubahan wujud yang terjadi!</p>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                    <div class="bg-amber-50 p-6 rounded-3xl border-2 border-amber-200 flex flex-col items-center text-center">
+                        <!-- Kettle SVG -->
+                        <svg class="w-40 h-40" viewBox="0 0 100 100" fill="none">
+                            <path d="M25 45 H75 C80 45 85 50 85 60 V75 C85 85 75 90 65 90 H35 C25 90 15 85 15 75 V60 C15 50 20 45 25 45 Z" fill="#94A3B8"/>
+                            <path d="M35 45 C35 35 65 35 65 45" stroke="#475569" stroke-width="4" fill="none"/>
+                            <path d="M75 55 L90 45 L85 65" stroke="#475569" stroke-width="5" fill="none" stroke-linecap="round"/>
+                            <!-- Vapor steam -->
+                            <path d="M85 40 Q88 30 85 20 T90 5" stroke="#CBD5E1" stroke-width="4" stroke-dasharray="2 2" fill="none" class="animate-bounce-slow"/>
+                            <path d="M78 35 Q80 25 78 15 T82 5" stroke="#CBD5E1" stroke-width="3" fill="none" class="animate-bounce-slow"/>
+                        </svg>
+                        <p class="text-xs font-bold text-amber-900 mt-2">Ibu memasak air di dapur. Saat air mendidih, keluar uap putih hangat dari mulut teko.</p>
+                    </div>
+
+                    <div class="space-y-3">
+                        <p class="text-sm font-bold text-slate-800">Perubahan wujud apakah yang terjadi pada air cair saat dipanaskan hingga menjadi uap?</p>
+                        <div id="act3Options" class="space-y-2">
+                            <!-- Options JS -->
+                        </div>
+                        <button onclick="checkActivity3()" class="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                            Jawab & Cek Feedback
+                        </button>
+                    </div>
+                </div>
+                <div id="act3Feedback" class="hidden p-3 rounded-2xl font-bold text-xs text-center"></div>
+            </div>
+
+            <!-- ACTIVITY 4: "Ayo Berpikir" HOTS Reasoning -->
+            <div id="activitySection4" class="hidden bg-white rounded-3xl p-6 border-4 border-teal-200 shadow-lg space-y-4">
+                <div class="bg-amber-50 p-4 rounded-2xl border border-amber-200">
+                    <h3 class="font-extrabold text-amber-900 text-base mb-1 flex items-center gap-2">
+                        <i data-lucide="brain-circuit" class="w-5 h-5 text-amber-600"></i>
+                        <span>Aktivitas 4: Ayo Berpikir (Tantangan HOTS)</span>
+                    </h3>
+                    <p class="text-xs text-amber-800">Analisislah situasi sains di bawah ini dan berikan alasan pilihanmu!</p>
+                </div>
+
+                <div class="space-y-4">
+                    <div class="bg-sky-50 p-4 rounded-2xl border border-sky-100">
+                        <p class="text-xs font-extrabold text-sky-900 mb-2">Kasus 1: Balon Udara di Bawah Terik Matahari</p>
+                        <p class="text-xs text-sky-800 leading-relaxed mb-3">
+                            Ahmad meletakkan balon yang sudah ditiup kencang di bawah terik matahari siang selama 2 jam. Tiba-tiba balon tersebut meletus sendiri. Mengapa hal itu bisa terjadi?
+                        </p>
+                        <div id="act4Options" class="space-y-2 text-xs">
+                            <!-- Options JS -->
+                        </div>
+                    </div>
+
+                    <button onclick="checkActivity4()" class="w-full py-3 bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                        Kirim Analisis Alasan
+                    </button>
+                    <div id="act4Feedback" class="hidden p-4 rounded-2xl font-semibold text-xs leading-relaxed"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 5: KUIS EVALUASI ================= -->
+        <section id="pageKuis" class="hidden space-y-6">
+            <!-- Quiz Start / Active Header -->
+            <div class="bg-white rounded-3xl p-5 border-2 border-amber-200 shadow-sm flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-amber-100 text-amber-700 hover:bg-amber-200">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-amber-900">Kuis Evaluasi Sains</h2>
+                        <p class="text-xs text-amber-600">Jawab 10 soal pilihan ganda secara cermat!</p>
+                    </div>
+                </div>
+
+                <div class="flex items-center gap-3">
+                    <div class="bg-amber-100 px-4 py-2 rounded-2xl border border-amber-200 font-extrabold text-amber-900 text-xs">
+                        Soal <span id="quizCurrentNum">1</span> / 10
+                    </div>
+                </div>
+            </div>
+
+            <!-- Quiz Card -->
+            <div id="quizCard" class="bg-white rounded-3xl border-4 border-amber-200 shadow-lg p-6 md:p-8 space-y-6">
+                <!-- Progress Line -->
+                <div class="w-full bg-slate-100 h-3 rounded-full overflow-hidden p-0.5 border border-slate-200">
+                    <div id="quizProgressBar" class="bg-gradient-to-r from-amber-400 to-coral h-full rounded-full transition-all duration-300" style="width: 10%"></div>
+                </div>
+
+                <!-- Question Text -->
+                <div class="space-y-2">
+                    <span id="quizBadge" class="inline-block px-3 py-1 bg-amber-100 text-amber-800 rounded-lg text-[11px] font-bold">
+                        Soal Kontekstual
+                    </span>
+                    <h3 id="quizQuestionText" class="text-base md:text-lg font-bold text-slate-800 leading-relaxed">
+                        Pertanyaan kuis akan ditampilkan di sini...
+                    </h3>
+                </div>
+
+                <!-- Answer Options (4 choices) -->
+                <div id="quizOptionsContainer" class="grid grid-cols-1 gap-3">
+                    <!-- Javascript populated 4 options -->
+                </div>
+
+                <!-- Navigation Footer -->
+                <div class="flex justify-between items-center pt-4 border-t border-slate-100">
+                    <button id="quizPrevBtn" onclick="prevQuizQuestion()" class="px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold rounded-xl text-xs flex items-center gap-1 transition">
+                        <i data-lucide="chevron-left" class="w-4 h-4"></i>
+                        <span>Sebelumnya</span>
+                    </button>
+
+                    <button id="quizNextBtn" onclick="nextQuizQuestion()" class="px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1 shadow-fun-sm transition">
+                        <span>Berikutnya</span>
+                        <i data-lucide="chevron-right" class="w-4 h-4"></i>
+                    </button>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= MODAL / VIEW: QUIZ DISCUSSION & SUMMARY ================= -->
+        <div id="quizResultModal" class="hidden fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
+            <div class="bg-white rounded-3xl border-4 border-amber-300 shadow-2xl max-w-2xl w-full p-6 md:p-8 my-8 relative animate-pulse-glow max-h-[90vh] overflow-y-auto">
+                <div class="text-center space-y-3">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-amber-100 text-amber-500 flex items-center justify-center shadow-inner">
+                        <i data-lucide="trophy" class="w-10 h-10"></i>
+                    </div>
+
+                    <h2 class="text-2xl font-extrabold text-slate-900">Hasil Kuis Evaluasi</h2>
+                    <p class="text-xs text-slate-600" id="quizModalStudentInfo">Siswa: - | Kelas: -</p>
+
+                    <!-- Score Badge -->
+                    <div class="bg-gradient-to-r from-amber-50 to-orange-50 p-6 rounded-3xl border-2 border-amber-200 my-4 inline-block w-full">
+                        <div class="text-xs font-extrabold text-amber-800 uppercase tracking-widest mb-1">Nilai Kamu</div>
+                        <div class="text-5xl font-extrabold text-coral my-1" id="quizModalScore">0</div>
+                        <div class="text-xs font-bold text-slate-700 mt-2" id="quizModalPredicate">Sangat Baik!</div>
+                    </div>
+
+                    <!-- Breakdown Table Grid -->
+                    <div class="grid grid-cols-3 gap-2 text-center text-xs font-bold">
+                        <div class="bg-emerald-50 p-3 rounded-2xl border border-emerald-200">
+                            <span class="text-emerald-600 block">Benar</span>
+                            <span class="text-lg text-emerald-800 font-extrabold" id="quizModalCorrect">0</span>
+                        </div>
+                        <div class="bg-rose-50 p-3 rounded-2xl border border-rose-200">
+                            <span class="text-rose-600 block">Salah</span>
+                            <span class="text-lg text-rose-800 font-extrabold" id="quizModalIncorrect">0</span>
+                        </div>
+                        <div class="bg-sky-50 p-3 rounded-2xl border border-sky-200">
+                            <span class="text-sky-600 block">Persentase</span>
+                            <span class="text-lg text-sky-800 font-extrabold" id="quizModalPercent">0%</span>
+                        </div>
+                    </div>
+
+                    <!-- Discussion Toggle Box -->
+                    <div class="pt-4 space-y-3 text-left">
+                        <button onclick="toggleDiscussionView()" class="w-full py-3 bg-sky-100 hover:bg-sky-200 text-sky-900 font-bold text-xs rounded-2xl flex items-center justify-center gap-2 transition">
+                            <i data-lucide="book-open" class="w-4 h-4"></i>
+                            <span id="discussionToggleText">Tampilkan Pembahasan Soal Lengkap</span>
+                        </button>
+
+                        <div id="discussionContainer" class="hidden space-y-3 mt-3 max-h-60 overflow-y-auto p-2 bg-slate-50 rounded-2xl border border-slate-200">
+                            <!-- Javascript populated discussion items -->
+                        </div>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row gap-2 pt-4">
+                        <button onclick="retakeQuiz()" class="flex-1 py-3 bg-amber-500 hover:bg-amber-600 text-white font-extrabold text-xs rounded-2xl shadow-fun-sm transition">
+                            Ulangi Kuis
+                        </button>
+                        <button onclick="closeQuizModalAndGoResult()" class="flex-1 py-3 bg-teal-500 hover:bg-teal-600 text-white font-extrabold text-xs rounded-2xl shadow-fun-sm transition">
+                            Ke Halaman Hasil
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ================= PAGE 6: HASIL BELAJAR ================= -->
+        <section id="pageHasil" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 border-2 border-purple-200 shadow-sm flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-purple-100 text-purple-700 hover:bg-purple-200">
+                        <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                    </button>
+                    <div>
+                        <h2 class="text-xl font-extrabold text-purple-900">Rapor Hasil Belajar</h2>
+                        <p class="text-xs text-purple-600">Catatan pencapaian materi dan riwayat kuis kamu.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Profile & Overall Stats Card -->
+                <div class="bg-white rounded-3xl border-4 border-purple-200 p-6 shadow-lg space-y-4 text-center">
+                    <div class="w-20 h-20 mx-auto rounded-full bg-purple-100 text-purple-600 flex items-center justify-center font-extrabold text-2xl border-4 border-purple-200" id="resAvatar">
+                        S
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-extrabold text-slate-900" id="resStudentName">Nama Siswa</h3>
+                        <p class="text-xs text-slate-500" id="resStudentClass">Kelas IV SD</p>
+                    </div>
+
+                    <div class="bg-purple-50 p-4 rounded-2xl border border-purple-100 text-left space-y-2 text-xs">
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Kemajuan Modul:</span>
+                            <span class="font-bold text-purple-900" id="resMateriText">0/12</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Aktivitas Selesai:</span>
+                            <span class="font-bold text-purple-900" id="resActivityText">0/4</span>
+                        </div>
+                        <div class="flex justify-between">
+                            <span class="text-slate-600">Status Belajar:</span>
+                            <span class="font-bold text-emerald-600" id="resStatusText">Aktif Belajar</span>
+                        </div>
+                    </div>
+
+                    <button onclick="resetAllProgress()" class="w-full py-2.5 bg-rose-100 hover:bg-rose-200 text-rose-700 font-bold text-xs rounded-xl transition flex items-center justify-center gap-1">
+                        <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+                        <span>Reset Semua Progres</span>
+                    </button>
+                </div>
+
+                <!-- Quiz Performance Detail -->
+                <div class="md:col-span-2 bg-white rounded-3xl border-4 border-purple-200 p-6 shadow-lg space-y-4">
+                    <h3 class="text-base font-extrabold text-slate-900 flex items-center gap-2">
+                        <i data-lucide="history" class="w-5 h-5 text-purple-600"></i>
+                        <span>Riwayat Nilai Kuis Terbaru</span>
+                    </h3>
+
+                    <div id="resQuizHistoryContainer" class="space-y-3">
+                        <!-- Javascript populated history -->
+                    </div>
+
+                    <div class="pt-4 flex flex-col sm:flex-row gap-3">
+                        <button onclick="navigateTo('kuis')" class="flex-1 py-3 bg-purple-500 hover:bg-purple-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                            Coba Kuis Lagi
+                        </button>
+                        <button onclick="navigateTo('materi')" class="flex-1 py-3 bg-sky-500 hover:bg-sky-600 text-white font-extrabold text-xs rounded-xl shadow-fun-sm transition">
+                            Ulangi Pelajari Materi
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 7: PETUNJUK ================= -->
+        <section id="pagePetunjuk" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 border-2 border-sky-200 shadow-sm flex items-center gap-3">
+                <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-sky-100 text-sky-700 hover:bg-sky-200">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h2 class="text-xl font-extrabold text-sky-900">Petunjuk Penggunaan Website</h2>
+                    <p class="text-xs text-sky-600">Ikuti langkah-langkah mudah di bawah ini!</p>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div class="bg-white p-5 rounded-3xl border-2 border-sky-200 shadow-sm flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-2xl bg-sky-500 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">1</div>
+                    <div>
+                        <h3 class="font-extrabold text-sky-900 text-sm mb-1">Masuk & Isi Data Siswa</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">Isi Nama Lengkap dan Kelasmu pada halaman pertama, lalu klik tombol "Mulai Belajar".</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border-2 border-blue-200 shadow-sm flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-2xl bg-blue-500 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">2</div>
+                    <div>
+                        <h3 class="font-extrabold text-sky-900 text-sm mb-1">Pelajari 12 Modul Materi</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">Buka menu Materi. Pelajari penjelasan wujud zat, amati contohnya, dan selesaikan tantangan "Ayo Cek Pemahaman".</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border-2 border-teal-200 shadow-sm flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-2xl bg-teal-500 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">3</div>
+                    <div>
+                        <h3 class="font-extrabold text-sky-900 text-sm mb-1">Kerjakan Aktivitas Belajar</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">Uji pemahamanmu dengan mengelompokkan benda, mencocokkan peristiwa, dan menjawab "Ayo Berpikir".</p>
+                    </div>
+                </div>
+
+                <div class="bg-white p-5 rounded-3xl border-2 border-amber-200 shadow-sm flex gap-4 items-start">
+                    <div class="w-10 h-10 rounded-2xl bg-amber-500 text-white font-extrabold text-lg flex items-center justify-center flex-shrink-0">4</div>
+                    <div>
+                        <h3 class="font-extrabold text-sky-900 text-sm mb-1">Kerjakan Kuis & Lihat Hasil</h3>
+                        <p class="text-xs text-slate-600 leading-relaxed">Selesaikan 10 soal evaluasi. Dapatkan skor otomatis dan baca Pembahasan Soal untuk belajar lebih dalam.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- ================= PAGE 8: TENTANG MEDIA ================= -->
+        <section id="pageTentang" class="hidden space-y-6">
+            <div class="bg-white rounded-3xl p-5 border-2 border-rose-200 shadow-sm flex items-center gap-3">
+                <button onclick="navigateTo('dashboard')" class="p-2 rounded-xl bg-rose-100 text-rose-700 hover:bg-rose-200">
+                    <i data-lucide="arrow-left" class="w-5 h-5"></i>
+                </button>
+                <div>
+                    <h2 class="text-xl font-extrabold text-rose-900">Tentang Media Pembelajaran</h2>
+                    <p class="text-xs text-rose-600">Informasi kurikulum, sasaran pengguna, dan pengembang.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl border-4 border-rose-200 p-6 shadow-lg space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-3">
+                        <h3 class="font-extrabold text-sky-900 text-base">Identitas Media</h3>
+                        <div class="space-y-2 text-xs text-slate-700">
+                            <p><strong>Nama Media:</strong> Petualangan Wujud Zat</p>
+                            <p><strong>Mata Pelajaran:</strong> IPAS (Ilmu Pengetahuan Alam & Sosial)</p>
+                            <p><strong>Materi Pokok:</strong> Wujud Zat dan Perubahannya</p>
+                            <p><strong>Sasaran Pengguna:</strong> Siswa Kelas IV SD/MI (Usia 9–10 Tahun)</p>
+                            <p><strong>Kurikulum:</strong> Kurikulum Merdeka (Fase B)</p>
+                        </div>
+                    </div>
+
+                    <div class="space-y-3">
+                        <h3 class="font-extrabold text-sky-900 text-base">Informasi Tim Pengembang</h3>
+                        <div class="bg-rose-50 p-4 rounded-2xl border border-rose-100 text-xs text-rose-950 space-y-2">
+                            <p><strong>Pengembang / Peneliti:</strong> Tim Pengembang Media Sains SD</p>
+                            <p><strong>Desain UI/UX:</strong> Spesialis Media Pembelajaran Interaktif SD/MI</p>
+                            <p><strong>Fitur Utama:</strong> SPA Tanpa Reload, Audio Synthesizer, Evaluasi Otomatis, Storage Lokal.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="bg-white border-t border-sky-100 py-4 mt-auto">
+        <div class="max-w-6xl mx-auto px-4 text-center text-xs text-sky-600 font-semibold">
+            &copy; 2026 Media Pembelajaran Interaktif IPAS Kelas IV SD/MI - Wujud Zat dan Perubahannya
+        </div>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        
+        // APP STATE
+        let appState = {
+            studentName: '',
+            studentClass: 'IV SD',
+            completedMaterials: [], // array of ids
+            completedActivities: [false, false, false, false],
+            currentMateriIdx: 0,
+            currentQuizIdx: 0,
+            quizAnswers: new Array(10).fill(null),
+            quizHistory: [],
+            audioEnabled: true
+        };
+
+        // 12 LEARNING MODULES DATA
+        const MATERIALS_DATA = [
+            {
+                id: 1,
+                title: "1. Pengertian Zat",
+                badge: "Konsep Dasar",
+                desc: "Zat adalah segala sesuatu yang memiliki massa (berat) dan menempati ruang (memiliki volume). Semua benda di sekitarmu, seperti meja, air minum, dan udara yang kamu hirup adalah zat!",
+                characteristics: [
+                    "Memiliki massa (dapat ditimbang beratnya).",
+                    "Menempati ruang (memiliki volume)."
+                ],
+                example: "Buku sekolah, jus jeruk dalam gelas, dan udara dalam balon.",
+                extra: "Sifat Dasar Zat",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="40" fill="#E0F2FE" stroke="#0284C7" stroke-width="4"/><path d="M30 65 L50 35 L70 65 Z" fill="#38BDF8"/><circle cx="50" cy="35" r="8" fill="#F59E0B"/><text x="50" y="80" text-anchor="middle" font-size="8" font-weight="bold" fill="#0369A1">Massa & Ruang</text></svg>`,
+                quickQuiz: {
+                    question: "Mengapa batu disebut sebagai suatu zat?",
+                    options: [
+                        "Karena batu memiliki berat dan menempati ruang",
+                        "Karena batu bentuknya selalu berubah",
+                        "Karena batu terbuat dari air"
+                    ],
+                    correct: 0,
+                    feedback: "Benar sekali! Batu adalah zat karena memiliki massa (berat) dan menempati ruang."
+                }
+            },
+            {
+                id: 2,
+                title: "2. Zat Padat & Karakteristiknya",
+                badge: "Wujud Zat",
+                desc: "Zat padat adalah zat yang memiliki bentuk dan volume yang tetap. Meskipun dipindahkan ke wadah yang berbeda, bentuk zat padat tidak akan berubah sendiri.",
+                characteristics: [
+                    "Bentuknya tetap (tidak berubah ikuti wadah).",
+                    "Volumenya tetap.",
+                    "Susunan partikelnya sangat rapat dan teratur."
+                ],
+                example: "Pensil, batu, meja, dan buku pelajaran.",
+                extra: "Partikel Rapat",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="20" y="20" width="60" height="60" rx="10" fill="#FEF3C7" stroke="#F59E0B" stroke-width="4"/><g fill="#D97706"><circle cx="35" cy="35" r="5"/><circle cx="50" cy="35" r="5"/><circle cx="65" cy="35" r="5"/><circle cx="35" cy="50" r="5"/><circle cx="50" cy="50" r="5"/><circle cx="65" cy="50" r="5"/><circle cx="35" cy="65" r="5"/><circle cx="50" cy="65" r="5"/><circle cx="65" cy="65" r="5"/></g></svg>`,
+                quickQuiz: {
+                    question: "Jika kamu memindahkan pensil dari tas ke dalam mangkuk, bentuk pensil akan...",
+                    options: [
+                        "Berubah menjadi bundar seperti mangkuk",
+                        "Tetap seperti bentuk pensil semula",
+                        "Mengecil dan mencair"
+                    ],
+                    correct: 1,
+                    feedback: "Tepat! Pensil adalah zat padat sehingga bentuknya selalu tetap."
+                }
+            },
+            {
+                id: 3,
+                title: "3. Zat Cair & Karakteristiknya",
+                badge: "Wujud Zat",
+                desc: "Zat cair adalah zat yang memiliki volume tetap, namun bentuknya selalu berubah-ubah mengikuti bentuk wadah yang ditempatinya.",
+                characteristics: [
+                    "Bentuknya berubah mengikuti wadahnya.",
+                    "Volumenya tetap.",
+                    "Mengalir dari tempat tinggi ke tempat yang lebih rendah.",
+                    "Partikelnya agak renggang dan dapat bergerak."
+                ],
+                example: "Air putih, minyak goreng, kecap, dan susu cair.",
+                extra: "Bentuk Berubah",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 30 V75 C30 82 70 82 70 75 V30" stroke="#0284C7" stroke-width="4" fill="none"/><path d="M32 50 C40 45 60 55 68 50 V75 C68 80 32 80 32 75 Z" fill="#38BDF8"/><g fill="#0284C7" opacity="0.6"><circle cx="40" cy="60" r="4"/><circle cx="55" cy="68" r="4"/><circle cx="60" cy="58" r="4"/></g></svg>`,
+                quickQuiz: {
+                    question: "Saat sirup dituangkan dari botol ke dalam gelas, apakah bentuk sirup berubah?",
+                    options: [
+                        "Tidak, bentuknya tetap seperti botol",
+                        "Ya, bentuknya berubah menyerupai gelas",
+                        "Ya, volumenya berkurang sendiri"
+                    ],
+                    correct: 1,
+                    feedback: "Hebat! Zat cair bentuknya selalu menyesuaikan dengan wadahnya."
+                }
+            },
+            {
+                id: 4,
+                title: "4. Zat Gas & Karakteristiknya",
+                badge: "Wujud Zat",
+                desc: "Zat gas adalah zat yang memiliki bentuk dan volume yang selalu berubah-ubah mengisi seluruh ruangan yang ditempatinya.",
+                characteristics: [
+                    "Bentuk dan volume berubah-ubah.",
+                    "Mengisi seluruh ruangan yang kosong.",
+                    "Partikelnya sangat renggang dan bergerak bebas ke segala arah."
+                ],
+                example: "Udara di dalam balon, asap pembakaran, uap air, dan gas LPG.",
+                extra: "Mengisi Ruang",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="55" r="35" fill="#CCFBF1" stroke="#0D9488" stroke-width="4"/><path d="M50 90 V100" stroke="#0D9488" stroke-width="4"/><g fill="#14B8A6"><circle cx="40" cy="40" r="4"/><circle cx="60" cy="45" r="4"/><circle cx="48" cy="65" r="4"/><circle cx="62" cy="68" r="4"/></g></svg>`,
+                quickQuiz: {
+                    question: "Manakah sifat utama dari zat gas?",
+                    options: [
+                        "Mempunyai bentuk yang keras dan tetap",
+                        "Mengisi seluruh ruangan yang ditempatinya",
+                        "Hanya bisa mengalir ke bawah"
+                    ],
+                    correct: 1,
+                    feedback: "Benar! Gas akan menyebar dan mengisi seluruh ruangan yang ada."
+                }
+            },
+            {
+                id: 5,
+                title: "5. Contoh Zat dalam Kehidupan",
+                badge: "Penerapan",
+                desc: "Mari kita amati benda-benda di sekitar sekolah dan rumahmu untuk mengenali wujudnya!",
+                characteristics: [
+                    "Padat: Meja, kursi, penghapus, batu.",
+                    "Cair: Air minum, kecap, sirup, minyak.",
+                    "Gas: Oksigen, uap air, angin, asap."
+                ],
+                example: "Saat minum es teh, ada batu es (padat), air teh (cair), dan gelembung udara/aroma (gas)!",
+                extra: "Identifikasi Benda",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="15" y="45" width="25" height="25" fill="#F59E0B" rx="4"/><path d="M50 40 C50 35 65 35 65 70 C50 70 50 40 50 40" fill="#38BDF8"/><circle cx="80" cy="50" r="12" fill="#2DD4BF" opacity="0.7"/></svg>`,
+                quickQuiz: {
+                    question: "Kecap manis di meja makan termasuk dalam wujud zat...",
+                    options: [
+                        "Zat Padat",
+                        "Zat Cair",
+                        "Zat Gas"
+                    ],
+                    correct: 1,
+                    feedback: "Pintar! Kecap manis adalah zat cair karena dapat mengalir dan bentuknya ikuti wadah."
+                }
+            },
+            {
+                id: 6,
+                title: "6. Perubahan Wujud Zat",
+                badge: "Konsep Perubahan",
+                desc: "Zat dapat berubah dari satu wujud ke wujud lainnya karena pengaruh kalor (panas). Jika dipanaskan atau didinginkan, wujud zat bisa berganti!",
+                characteristics: [
+                    "Memerlukan panas (menyerap kalor): Mencair, Menguap, Menyublim.",
+                    "Melepaskan panas (mendingin): Membeku, Mengembun, Mengkristal."
+                ],
+                example: "Es batu yang didiamkan di tempat terbuka akan berubah dari padat menjadi cair.",
+                extra: "Siklus Kalor",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="50" r="38" fill="none" stroke="#F97316" stroke-width="4" stroke-dasharray="6 6"/><polygon points="50,20 60,35 40,35" fill="#F97316"/><text x="50" y="55" text-anchor="middle" font-size="9" font-weight="bold" fill="#C2410C">Pengaruh Panas</text></svg>`,
+                quickQuiz: {
+                    question: "Faktor utama yang menyebabkan perubahan wujud zat adalah...",
+                    options: [
+                        "Perubahan suhu (dipanaskan atau didinginkan)",
+                        "Perubahan warna wadah",
+                        "Ukuran benda yang membesar"
+                    ],
+                    correct: 0,
+                    feedback: "Tepat sekali! Perubahan suhu/kalor adalah penyebab zat berubah wujud."
+                }
+            },
+            {
+                id: 7,
+                title: "7. Mencair (Padat → Cair)",
+                badge: "Perubahan Wujud",
+                desc: "Mencair adalah peristiwa perubahan wujud zat dari PADAT menjadi CAIR akibat dipanaskan (menerima panas).",
+                characteristics: [
+                    "Wujud awal: Padat.",
+                    "Wujud akhir: Cair.",
+                    "Memerlukan energi panas (kalor)."
+                ],
+                example: "Es krim yang meleleh di terik matahari, mentega yang dipanaskan di wajan, dan lilin yang dibakar.",
+                extra: "Padat ke Cair",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><rect x="35" y="25" width="30" height="30" fill="#BAE6FD" rx="5" stroke="#0284C7" stroke-width="3"/><path d="M30 65 Q50 55 70 65 V80 H30 Z" fill="#38BDF8"/><circle cx="50" cy="58" r="4" fill="#BAE6FD"/></svg>`,
+                quickQuiz: {
+                    question: "Saat mentega dimasukkan ke dalam wajan panas untuk menggoreng, mentega akan mengalami peristiwa...",
+                    options: [
+                        "Membeku",
+                        "Mencair",
+                        "Mengembun"
+                    ],
+                    correct: 1,
+                    feedback: "Benar! Mentega padat menerima panas dari wajan sehingga mencair."
+                }
+            },
+            {
+                id: 8,
+                title: "8. Membeku (Cair → Padat)",
+                badge: "Perubahan Wujud",
+                desc: "Membeku adalah peristiwa perubahan wujud zat dari CAIR menjadi PADAT akibat didinginkan (melepaskan panas).",
+                characteristics: [
+                    "Wujud awal: Cair.",
+                    "Wujud akhir: Padat.",
+                    "Melepaskan energi panas (proses mendingin)."
+                ],
+                example: "Air yang dimasukkan ke dalam freezer menjadi es batu, dan pembuatan agar-agar yang memadat saat dingin.",
+                extra: "Cair ke Padat",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M30 40 Q50 45 70 40 V60 H30 Z" fill="#7DD3FC"/><rect x="30" y="50" width="40" height="35" fill="#E0F2FE" stroke="#0284C7" stroke-width="4" rx="4"/></svg>`,
+                quickQuiz: {
+                    question: "Ibu membuat es lilin dari sirup manis dengan memasukannya ke lemari es (freezer). Peristiwa ini adalah...",
+                    options: [
+                        "Membeku",
+                        "Menguap",
+                        "Menyublim"
+                    ],
+                    correct: 0,
+                    feedback: "Luar biasa! Sirup cair mendingin dan berubah menjadi es yang padat (membeku)."
+                }
+            },
+            {
+                id: 9,
+                title: "9. Menguap (Cair → Gas)",
+                badge: "Perubahan Wujud",
+                desc: "Menguap adalah peristiwa perubahan wujud zat dari CAIR menjadi GAS akibat dipanaskan.",
+                characteristics: [
+                    "Wujud awal: Cair.",
+                    "Wujud akhir: Gas.",
+                    "Memerlukan panas (kalor)."
+                ],
+                example: "Air mendidih yang mengeluarkan uap, pakaian basah yang dijemur di bawah matahari jadi kering, dan bensin yang dibiarkan di wadah terbuka.",
+                extra: "Cair ke Gas",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M25 65 Q50 60 75 65 V85 H25 Z" fill="#38BDF8"/><path d="M35 50 Q40 35 35 20 M50 50 Q55 35 50 20 M65 50 Q70 35 65 20" stroke="#94A3B8" stroke-width="4" stroke-linecap="round" fill="none"/></svg>`,
+                quickQuiz: {
+                    question: "Mengapa pakaian basah yang dijemur di bawah terik matahari lama-kelamaan menjadi kering?",
+                    options: [
+                        "Air di pakaian menguap menjadi gas karena panas matahari",
+                        "Air di pakaian berubah menjadi batu es",
+                        "Air di pakaian diserap oleh baju secara permanen"
+                    ],
+                    correct: 0,
+                    feedback: "Tepat! Panas matahari membuat air di baju berubah wujud menjadi uap air (menguap)."
+                }
+            },
+            {
+                id: 10,
+                title: "10. Mengembun (Gas → Cair)",
+                badge: "Perubahan Wujud",
+                desc: "Mengembun adalah peristiwa perubahan wujud zat dari GAS menjadi CAIR akibat didinginkan.",
+                characteristics: [
+                    "Wujud awal: Gas.",
+                    "Wujud akhir: Cair.",
+                    "Terjadi saat uap panas menyentuh permukaan dingin."
+                ],
+                example: "Titik-titik air di dinding luar gelas berisi es sirup, dan embun pagi di dedaunan.",
+                extra: "Gas ke Cair",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50 15 C30 45 30 65 50 85 C70 65 70 45 50 15 Z" fill="#38BDF8" stroke="#0284C7" stroke-width="3"/><circle cx="42" cy="55" r="5" fill="white" opacity="0.6"/></svg>`,
+                quickQuiz: {
+                    question: "Ketika kamu menuang es teh ke dalam gelas, muncul titik-titik air di dinding luar gelas. Peristiwa itu dinamakan...",
+                    options: [
+                        "Mengembun",
+                        "Mencair",
+                        "Mengkristal"
+                    ],
+                    correct: 0,
+                    feedback: "Pintar! Uap air di udara menyentuh dinding gelas dingin lalu mengembun jadi air."
+                }
+            },
+            {
+                id: 11,
+                title: "11. Menyublim (Padat → Gas)",
+                badge: "Perubahan Wujud",
+                desc: "Menyublim adalah peristiwa perubahan wujud zat dari PADAT langsung menjadi GAS tanpa melalui wujud cair.",
+                characteristics: [
+                    "Wujud awal: Padat.",
+                    "Wujud akhir: Gas.",
+                    "Memerlukan panas dari ruangan."
+                ],
+                example: "Kapur barus (kamfer) di dalam lemari yang semakin lama semakin mengecil dan harum, serta dry ice (es kering).",
+                extra: "Padat ke Gas",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><circle cx="50" cy="70" r="18" fill="#E2E8F0" stroke="#64748B" stroke-width="4"/><path d="M40 45 Q45 30 40 15 M60 45 Q65 30 60 15" stroke="#A855F7" stroke-width="3" stroke-linecap="round" fill="none"/></svg>`,
+                quickQuiz: {
+                    question: "Kapur barus di dalam lemari baju lama-kelamaan mengecil dan habis. Ke mana kapur barus tersebut?",
+                    options: [
+                        "Berubah menjadi gas harum yang menyebar di lemari",
+                        "Dimakan oleh baju",
+                        "Berubah menjadi air di lantai"
+                    ],
+                    correct: 0,
+                    feedback: "Hebat! Kapur barus padat menyublim berubah langsung menjadi gas."
+                }
+            },
+            {
+                id: 12,
+                title: "12. Mengkristal (Gas → Padat)",
+                badge: "Perubahan Wujud",
+                desc: "Mengkristal (atau terdeposisi) adalah peristiwa perubahan wujud zat dari GAS menjadi PADAT.",
+                characteristics: [
+                    "Wujud awal: Gas.",
+                    "Wujud akhir: Padat.",
+                    "Melepaskan energi panas secara cepat."
+                ],
+                example: "Pembentukan salju dari uap air di awan yang sangat dingin, dan pembuatan garam dapur dari uap air laut.",
+                extra: "Gas ke Padat",
+                svg: `<svg viewBox="0 0 100 100" class="w-full h-full"><path d="M50 15 V85 M15 50 H85 M25 25 L75 75 M25 75 L75 25" stroke="#38BDF8" stroke-width="5" stroke-linecap="round"/></svg>`,
+                quickQuiz: {
+                    question: "Peristiwa terbentuknya kristal salju dari uap air dingin di udara dinamakan...",
+                    options: [
+                        "Mengkristal",
+                        "Menguap",
+                        "Mencair"
+                    ],
+                    correct: 0,
+                    feedback: "Luar biasa! Uap air gas berubah menjadi kristal es padat saat sangat dingin."
+                }
+            }
+        ];
+
+        // 10 QUIZ EVALUATION QUESTIONS (HOTS & Contextual)
+        const QUIZ_DATA = [
+            {
+                id: 1,
+                badge: "Aplikasi Sehari-hari",
+                question: "Rani membeli es krim kerucut saat siang hari yang sangat terik. Baru berjalan beberapa langkah, es krimnya menetes melumuri tangannya. Peristiwa perubahan wujud yang terjadi pada es krim Rani adalah...",
+                options: ["A. Membeku", "B. Mencair", "C. Menguap", "D. Menyublim"],
+                correct: 1,
+                discussion: "Es krim yang awalnya padat menerima energi panas (kalor) dari udara siang hari yang terik, sehingga berubah wujud menjadi cair (Mencair)."
+            },
+            {
+                id: 2,
+                badge: "Karakteristik Partikel",
+                question: "Di perpustakaan, Made menata buku-buku sains di dalam lemari. Buku memiliki bentuk yang tetap dan tidak berubah saat dipindahkan dari meja ke dalam lemari. Hal ini disebabkan karena...",
+                options: [
+                    "A. Buku merupakan zat cair yang kental",
+                    "B. Buku adalah zat padat dengan susunan partikel rapat",
+                    "C. Buku dapat menyerap udara ruangan",
+                    "D. Buku tidak memiliki massa dan volume"
+                ],
+                correct: 1,
+                discussion: "Buku adalah benda padat. Sifat zat padat memiliki bentuk dan volume tetap karena susunan partikelnya sangat rapat dan teratur."
+            },
+            {
+                id: 3,
+                badge: "Siklus Memasak",
+                question: "Saat Ibu memasak air menggunakan panci tertutup hingga mendidih, terdapat dua perubahan wujud sekaligus: saat air mendidih keluar uap (X), dan saat tutup panci dibuka terdapat titik air di baliknya (Y). Proses X dan Y adalah...",
+                options: [
+                    "A. X = Menguap, Y = Mengembun",
+                    "B. X = Mencair, Y = Membeku",
+                    "C. X = Menyublim, Y = Mengkristal",
+                    "D. X = Mengembun, Y = Menguap"
+                ],
+                correct: 0,
+                discussion: "Air cair yang dipanaskan berubah jadi uap air (Menguap = X). Uap air panas yang menyentuh tutup panci dingin berubah kembali jadi titik air (Mengembun = Y)."
+            },
+            {
+                id: 4,
+                badge: "Analisis Kamfer",
+                question: "Nenek meletakkan 5 butir kapur barus di dalam lemari pakaian. Satu bulan kemudian, kapur barus itu hilang dan baju di dalam lemari menjadi sangat harum. Mengapa kapur barus tersebut bisa hilang?",
+                options: [
+                    "A. Kapur barus larut menjadi air di dasar lemari",
+                    "B. Kapur barus dimakan oleh serangga lemari",
+                    "C. Kapur barus berubah langsung dari padat menjadi gas harum",
+                    "D. Kapur barus menguap karena disiram air"
+                ],
+                correct: 2,
+                discussion: "Kapur barus mengalami proses Menyublim, yaitu perubahan wujud dari padat langsung menjadi gas harum tanpa menjadi cair terlebih dahulu."
+            },
+            {
+                id: 5,
+                badge: "Proses Pembuatan Es",
+                question: "Dono mengisi cetakan plastik dengan air sirup cair, lalu memasukkannya ke dalam freezer lemari es. Setelah 4 jam, sirup berubah menjadi keras dan kaku. Proses ini terjadi karena...",
+                options: [
+                    "A. Sirup menyerap panas dari freezer",
+                    "B. Sirup melepaskan panas sehingga membeku",
+                    "C. Sirup menguap ke udara freezer",
+                    "D. Sirup mengalami proses menyublim"
+                ],
+                correct: 1,
+                discussion: "Dalam freezer yang sangat dingin, sirup cair melepaskan energi panasnya ke lingkungan sekitar sehingga temperaturnya turun dan membeku menjadi padat."
+            },
+            {
+                id: 6,
+                badge: "Sifat Zat Gas",
+                question: "Saat balon gas diikatkan pada Ulang Tahun Siti lalu bocor sedikit, bau harum dari dalam balon dapat tercium oleh teman-teman di seluruh pojok ruangan. Sifat zat gas yang terbukti dari peristiwa ini adalah...",
+                options: [
+                    "A. Gas memiliki bentuk tetap seperti balon",
+                    "B. Gas selalu mengalir ke tempat yang lebih rendah",
+                    "C. Gas dapat menempati dan mengisi seluruh ruangan",
+                    "D. Gas tidak dapat bergerak bebas"
+                ],
+                correct: 2,
+                discussion: "Zat gas memiliki sifat partikel yang bergerak bebas ke segala arah dan mengisi seluruh volume ruangan yang tersedia."
+            },
+            {
+                id: 7,
+                badge: "Fenomena Alam",
+                question: "Pada pagi hari yang dingin, Wayan melihat rumput di halaman rumahnya basah oleh titik-titik air, padahal semalam tidak turun hujan. Titik-titik air tersebut berasal dari...",
+                options: [
+                    "A. Air dalam tanah yang meluap ke atas",
+                    "B. Uap air di udara yang mendingin dan mengembun",
+                    "C. Es batu yang mencair dari awan",
+                    "D. Hasil penyubliman batu rumput"
+                ],
+                correct: 1,
+                discussion: "Embun pagi terjadi karena uap air (gas) yang ada di udara sekitar menyentuh dedaunan dingin pada malam/pagi hari, lalu berubah wujud menjadi titik air (Mengembun)."
+            },
+            {
+                id: 8,
+                badge: "Perubahan Kalor",
+                question: "Di antara perubahan wujud berikut, kelompok manakah yang semuanya MEMERLUKAN panas (menyerap kalor)?",
+                options: [
+                    "A. Membeku, Mengembun, Mengkristal",
+                    "B. Mencair, Menguap, Menyublim",
+                    "C. Mencair, Membeku, Mengembun",
+                    "D. Menguap, Mengembun, Mengkristal"
+                ],
+                correct: 1,
+                discussion: "Mencair (padat->cair), Menguap (cair->gas), dan Menyublim (padat->gas) adalah 3 proses yang membutuhkan energi panas (kalor) agar wujudnya berubah."
+            },
+            {
+                id: 9,
+                badge: "Pembuatan Salju",
+                question: "Di daerah beriklim dingin, uap air di awan dapat langsung berubah menjadi kristal-kristal es salju tanpa menjadi air terlebih dahulu ketika suhu sangat dingin. Peristiwa ini disebut...",
+                options: [
+                    "A. Mengkristal",
+                    "B. Menguap",
+                    "C. Mencair",
+                    "D. Menyublim"
+                ],
+                correct: 0,
+                discussion: "Perubahan wujud dari zat gas (uap air) langsung menjadi padat (kristal es/salju) dinamakan Mengkristal atau terdeposisi."
+            },
+            {
+                id: 10,
+                badge: "Eksperimen Dapur",
+                question: "Ibu melelehkan cokelat batangan di atas mangkuk panas untuk menghias kue. Setelah dihias pada kue dan didiamkan di suhu ruangan, cokelat lelehan tersebut kembali menjadi keras. Urutan perubahan wujud cokelat tersebut adalah...",
+                options: [
+                    "A. Mencair kemudian Membeku",
+                    "B. Membeku kemudian Menguap",
+                    "C. Menguap kemudian Mengembun",
+                    "D. Menyublim kemudian Mencair"
+                ],
+                correct: 0,
+                discussion: "Cokelat padat dipanaskan menjadi lelehan cair (Mencair). Saat didiamkan mendingin di suhu ruang, cokelat cair berubah padat kembali (Membeku)."
+            }
+        ];
+
+        // SOUND SYNTHESIZER (Web Audio API - No External Files)
+        function playSound(type) {
+            if (!appState.audioEnabled) return;
+            try {
+                const ctx = new (window.AudioContext || window.webkitAudioContext)();
+                const osc = ctx.createOscillator();
+                const gain = ctx.createGain();
+                osc.connect(gain);
+                gain.connect(ctx.destination);
+
+                if (type === 'correct') {
+                    osc.type = 'triangle';
+                    osc.frequency.setValueAtTime(523.25, ctx.currentTime); // C5
+                    osc.frequency.exponentialRampToValueAtTime(659.25, ctx.currentTime + 0.15); // E5
+                    osc.frequency.exponentialRampToValueAtTime(783.99, ctx.currentTime + 0.3); // G5
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.4);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.4);
+                } else if (type === 'wrong') {
+                    osc.type = 'sawtooth';
+                    osc.frequency.setValueAtTime(220, ctx.currentTime);
+                    osc.frequency.setValueAtTime(180, ctx.currentTime + 0.15);
+                    gain.gain.setValueAtTime(0.2, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.3);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.3);
+                } else if (type === 'click') {
+                    osc.type = 'sine';
+                    osc.frequency.setValueAtTime(400, ctx.currentTime);
+                    gain.gain.setValueAtTime(0.1, ctx.currentTime);
+                    gain.gain.exponentialRampToValueAtTime(0.01, ctx.currentTime + 0.08);
+                    osc.start();
+                    osc.stop(ctx.currentTime + 0.08);
+                }
+            } catch (e) {
+                // Audio context fallback silent
+            }
+        }
+
+        function toggleAudio() {
+            appState.audioEnabled = !appState.audioEnabled;
+            const icon = document.getElementById('audioIcon');
+            const btn = document.getElementById('audioBtn');
+            if (appState.audioEnabled) {
+                icon.setAttribute('data-lucide', 'volume-2');
+                btn.className = "p-2 rounded-xl bg-amber-100 text-amber-700 hover:bg-amber-200 transition font-bold text-sm flex items-center gap-1 shadow-sm";
+                playSound('click');
+            } else {
+                icon.setAttribute('data-lucide', 'volume-x');
+                btn.className = "p-2 rounded-xl bg-slate-200 text-slate-500 transition font-bold text-sm flex items-center gap-1 shadow-sm";
+            }
+            lucide.createIcons();
+        }
+
+        // NAVIGATION ENGINE
+        function navigateTo(pageId) {
+            playSound('click');
+            const pages = ['pageLogin', 'pageDashboard', 'pageMateri', 'pageAktivitas', 'pageKuis', 'pageHasil', 'pagePetunjuk', 'pageTentang'];
+            pages.forEach(p => {
+                const el = document.getElementById(p);
+                if (el) el.classList.add('hidden');
+            });
+
+            const target = document.getElementById('page' + pageId.charAt(0).toUpperCase() + pageId.slice(1));
+            if (target) {
+                target.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' });
+            }
+
+            const header = document.getElementById('mainHeader');
+            if (pageId === 'login') {
+                header.classList.add('hidden');
+            } else {
+                header.classList.remove('hidden');
+            }
+
+            // Sync View Specific Data
+            if (pageId === 'dashboard') updateDashboardProgress();
+            if (pageId === 'materi') loadMateri(appState.currentMateriIdx);
+            if (pageId === 'aktivitas') initActivities();
+            if (pageId === 'kuis') loadQuizQuestion(appState.currentQuizIdx);
+            if (pageId === 'hasil') loadHasilPage();
+        }
+
+        // LOGIN HANDLER
+        function handleLogin(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('studentName').value.trim();
+            const classInput = document.getElementById('studentClass').value;
+
+            if (!nameInput) return;
+
+            appState.studentName = nameInput;
+            appState.studentClass = classInput;
+
+            saveToLocalStorage();
+            updateUserProfileUI();
+            navigateTo('dashboard');
+        }
+
+        function updateUserProfileUI() {
+            document.getElementById('navStudentName').innerText = appState.studentName || 'Siswa';
+            document.getElementById('navStudentClass').innerText = appState.studentClass || 'Kelas 4';
+            document.getElementById('dashGreeting').innerText = `Selamat Datang, ${appState.studentName}!`;
+            document.getElementById('navAvatar').innerText = appState.studentName ? appState.studentName.charAt(0).toUpperCase() : 'S';
+            document.getElementById('resAvatar').innerText = appState.studentName ? appState.studentName.charAt(0).toUpperCase() : 'S';
+            document.getElementById('resStudentName').innerText = appState.studentName || 'Siswa';
+            document.getElementById('resStudentClass').innerText = appState.studentClass || 'Kelas 4';
+        }
+
+        // LOCAL STORAGE INTEGRATION
+        function saveToLocalStorage() {
+            const data = {
+                studentName: appState.studentName,
+                studentClass: appState.studentClass,
+                completedMaterials: appState.completedMaterials,
+                completedActivities: appState.completedActivities,
+                quizHistory: appState.quizHistory
+            };
+            localStorage.setItem('sains_cilik_data', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('sains_cilik_data');
+            if (saved) {
+                try {
+                    const parsed = JSON.parse(saved);
+                    appState.studentName = parsed.studentName || '';
+                    appState.studentClass = parsed.studentClass || 'Kelas 4';
+                    appState.completedMaterials = parsed.completedMaterials || [];
+                    appState.completedActivities = parsed.completedActivities || [false, false, false, false];
+                    appState.quizHistory = parsed.quizHistory || [];
+                } catch (err) {
+                    console.error("Local storage parse error", err);
+                }
+            }
+        }
+
+        // PROGRESS CALCULATION
+        function updateDashboardProgress() {
+            const matCount = appState.completedMaterials.length;
+            const actCount = appState.completedActivities.filter(Boolean).length;
+
+            const totalItems = 12 + 4;
+            const doneItems = matCount + actCount;
+            const percent = Math.round((doneItems / totalItems) * 100);
+
+            document.getElementById('overallPercent').innerText = percent + '%';
+            document.getElementById('overallProgressBar').style.width = percent + '%';
+            document.getElementById('materiProgressText').innerText = `Materi: ${matCount}/12`;
+            document.getElementById('activityProgressText').innerText = `Aktivitas: ${actCount}/4`;
+        }
+
+        // MATERI ENGINE
+        function initMateriSelect() {
+            const select = document.getElementById('materiSelect');
+            select.innerHTML = '';
+            MATERIALS_DATA.forEach((m, idx) => {
+                const opt = document.createElement('option');
+                opt.value = idx;
+                opt.innerText = m.title;
+                select.appendChild(opt);
+            });
+        }
+
+        function loadMateri(index) {
+            if (index < 0 || index >= MATERIALS_DATA.length) return;
+            appState.currentMateriIdx = index;
+            const data = MATERIALS_DATA[index];
+
+            document.getElementById('materiSelect').value = index;
+            document.getElementById('materiBadge').innerText = `Topik ${index + 1} dari 12`;
+            document.getElementById('materiTitle').innerText = data.title;
+            document.getElementById('materiDesc').innerText = data.desc;
+            document.getElementById('materiExample').innerText = data.example;
+            document.getElementById('materiExtraBadge').innerText = data.extra;
+            document.getElementById('materiSvgContainer').innerHTML = data.svg;
+            document.getElementById('materiStepIndicator').innerText = `${index + 1} / 12`;
+
+            // Characteristics
+            const charBox = document.getElementById('materiCharacteristicsBox');
+            const charList = document.getElementById('materiCharacteristicsList');
+            charList.innerHTML = '';
+            if (data.characteristics && data.characteristics.length > 0) {
+                charBox.classList.remove('hidden');
+                data.characteristics.forEach(c => {
+                    const li = document.createElement('li');
+                    li.innerText = c;
+                    charList.appendChild(li);
+                });
+            } else {
+                charBox.classList.add('hidden');
+            }
+
+            // Quick Quiz Render
+            document.getElementById('quickQuizQuestion').innerText = data.quickQuiz.question;
+            const optBox = document.getElementById('quickQuizOptions');
+            optBox.innerHTML = '';
+            const feedbackEl = document.getElementById('quickQuizFeedback');
+            feedbackEl.classList.add('hidden');
+
+            data.quickQuiz.options.forEach((optText, optIdx) => {
+                const btn = document.createElement('button');
+                btn.className = "p-2.5 bg-white border-2 border-teal-200 hover:border-teal-400 rounded-xl font-bold text-left text-slate-800 transition active:scale-95";
+                btn.innerText = optText;
+                btn.onclick = () => answerQuickQuiz(optIdx, data.quickQuiz.correct, data.quickQuiz.feedback, data.id);
+                optBox.appendChild(btn);
+            });
+
+            // Mark completed if visited
+            if (!appState.completedMaterials.includes(data.id)) {
+                appState.completedMaterials.push(data.id);
+                saveToLocalStorage();
+            }
+
+            // Button States
+            document.getElementById('prevMateriBtn').disabled = (index === 0);
+            document.getElementById('nextMateriBtn').disabled = (index === MATERIALS_DATA.length - 1);
+            lucide.createIcons();
+        }
+
+        function answerQuickQuiz(selectedIdx, correctIdx, feedbackText, matId) {
+            const feedbackEl = document.getElementById('quickQuizFeedback');
+            feedbackEl.classList.remove('hidden');
+            if (selectedIdx === correctIdx) {
+                playSound('correct');
+                feedbackEl.className = "p-2.5 rounded-xl font-bold text-center mt-2 bg-emerald-100 text-emerald-800 border border-emerald-300";
+                feedbackEl.innerText = "🎉 " + feedbackText;
+            } else {
+                playSound('wrong');
+                feedbackEl.className = "p-2.5 rounded-xl font-bold text-center mt-2 bg-rose-100 text-rose-800 border border-rose-300";
+                feedbackEl.innerText = "❌ Belum tepat. Coba perhatikan kembali sifat zat tersebut!";
+            }
+        }
+
+        function prevMateri() {
+            if (appState.currentMateriIdx > 0) loadMateri(appState.currentMateriIdx - 1);
+        }
+
+        function nextMateri() {
+            if (appState.currentMateriIdx < MATERIALS_DATA.length - 1) loadMateri(appState.currentMateriIdx + 1);
+        }
+
+        // ACTIVITIES ENGINE
+        let act1State = { selectedItem: null, placed: { padat: [], cair: [], gas: [] } };
+        const ACT1_ITEMS = [
+            { id: 'batu', name: 'Batu Kali', type: 'padat' },
+            { id: 'air', name: 'Air Teh', type: 'cair' },
+            { id: 'udara', name: 'Udara Ban', type: 'gas' },
+            { id: 'pensil', name: 'Pensil Kayu', type: 'padat' },
+            { id: 'kecap', name: 'Kecap Manis', type: 'cair' },
+            { id: 'asap', name: 'Asap Pabrik', type: 'gas' }
+        ];
+
+        function initActivities() {
+            switchActivityTab(1);
+            resetActivity1();
+            initActivity2();
+            initActivity3();
+            initActivity4();
+        }
+
+        function switchActivityTab(num) {
+            playSound('click');
+            for (let i = 1; i <= 4; i++) {
+                const sec = document.getElementById(`activitySection${i}`);
+                const tab = document.getElementById(`actTab${i}`);
+                if (sec) sec.classList.add('hidden');
+                if (tab) {
+                    tab.className = "act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-white text-teal-800 border-teal-200 hover:bg-teal-50";
+                }
+            }
+
+            document.getElementById(`activitySection${num}`).classList.remove('hidden');
+            document.getElementById(`actTab${num}`).className = "act-tab-btn py-3 px-2 rounded-2xl font-bold text-xs border-2 text-center transition bg-teal-500 text-white border-teal-600 shadow-sm";
+        }
+
+        // Activity 1: Categorize
+        function resetActivity1() {
+            act1State = { selectedItem: null, placed: { padat: [], cair: [], gas: [] } };
+            renderAct1();
+            document.getElementById('act1Feedback').classList.add('hidden');
+        }
+
+        function renderAct1() {
+            const unsortedBox = document.getElementById('act1UnsortedBox');
+            unsortedBox.innerHTML = '';
+
+            ACT1_ITEMS.forEach(item => {
+                const isPlaced = Object.values(act1State.placed).some(arr => arr.includes(item.id));
+                if (!isPlaced) {
+                    const tag = document.createElement('button');
+                    tag.className = `draggable-item px-3 py-1.5 rounded-xl font-bold text-xs shadow-sm transition border-2 ${act1State.selectedItem === item.id ? 'bg-amber-400 text-amber-950 border-amber-600 scale-105' : 'bg-white text-sky-900 border-sky-300 hover:bg-sky-100'}`;
+                    tag.innerText = item.name;
+                    tag.onclick = () => {
+                        playSound('click');
+                        act1State.selectedItem = item.id;
+                        renderAct1();
+                    };
+                    unsortedBox.appendChild(tag);
+                }
+            });
+
+            ['padat', 'cair', 'gas'].forEach(type => {
+                const target = document.getElementById(`act1Target${type.charAt(0).toUpperCase() + type.slice(1)}`);
+                target.innerHTML = '';
+                act1State.placed[type].forEach(itemId => {
+                    const itemObj = ACT1_ITEMS.find(i => i.id === itemId);
+                    const tag = document.createElement('span');
+                    tag.className = "px-2.5 py-1 bg-white border border-slate-300 rounded-lg text-xs font-bold text-slate-800 shadow-xs";
+                    tag.innerText = itemObj.name;
+                    target.appendChild(tag);
+                });
+            });
+        }
+
+        function placeAct1Item(category) {
+            if (!act1State.selectedItem) return;
+            playSound('click');
+            act1State.placed[category].push(act1State.selectedItem);
+            act1State.selectedItem = null;
+            renderAct1();
+        }
+
+        function checkActivity1() {
+            let correct = true;
+            let countPlaced = 0;
+
+            ['padat', 'cair', 'gas'].forEach(cat => {
+                act1State.placed[cat].forEach(itemId => {
+                    countPlaced++;
+                    const itemObj = ACT1_ITEMS.find(i => i.id === itemId);
+                    if (itemObj.type !== cat) correct = false;
+                });
+            });
+
+            const fb = document.getElementById('act1Feedback');
+            fb.classList.remove('hidden');
+
+            if (countPlaced < ACT1_ITEMS.length) {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-amber-100 text-amber-900 border border-amber-300";
+                fb.innerText = "⚠️ Masih ada benda yang belum kamu masukkan ke dalam kotak. Yuk selesaikan!";
+                playSound('wrong');
+            } else if (correct) {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-emerald-100 text-emerald-900 border border-emerald-300";
+                fb.innerText = "🎉 Luar Biasa! Semua benda telah dikelompokkan dengan sangat tepat!";
+                playSound('correct');
+                markActivityDone(0);
+            } else {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-rose-100 text-rose-900 border border-rose-300";
+                fb.innerText = "❌ Belum tepat. Coba perhatikan kembali bentuk dan sifat benda yang kamu pilih!";
+                playSound('wrong');
+            }
+        }
+
+        // Activity 2: Matching
+        const ACT2_PAIRS = [
+            { event: "Es krim melumer di terik matahari", correct: "Mencair" },
+            { event: "Air laut menguap menjadi garam dapur/kristal", correct: "Mengkristal" },
+            { event: "Membuat es batu di dalam freezer", correct: "Membeku" },
+            { event: "Kapur barus di lemari baju makin mengecil", correct: "Menyublim" }
+        ];
+
+        function initActivity2() {
+            const container = document.getElementById('act2Container');
+            container.innerHTML = '';
+            ACT2_PAIRS.forEach((pair, idx) => {
+                const card = document.createElement('div');
+                card.className = "p-3.5 bg-slate-50 border border-slate-200 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2";
+                card.innerHTML = `
+                    <span class="text-xs font-bold text-slate-800 flex-1">Peristiwa: ${pair.event}</span>
+                    <select id="act2Select${idx}" class="px-3 py-1.5 rounded-xl border-2 border-teal-300 font-bold text-xs bg-white text-teal-900 outline-none">
+                        <option value="">-- Pilih Perubahan Wujud --</option>
+                        <option value="Mencair">Mencair</option>
+                        <option value="Membeku">Membeku</option>
+                        <option value="Menguap">Menguap</option>
+                        <option value="Mengembun">Mengembun</option>
+                        <option value="Menyublim">Menyublim</option>
+                        <option value="Mengkristal">Mengkristal</option>
+                    </select>
+                `;
+                container.appendChild(card);
+            });
+        }
+
+        function resetActivity2() {
+            initActivity2();
+            document.getElementById('act2Feedback').classList.add('hidden');
+        }
+
+        function checkActivity2() {
+            let correct = true;
+            let allAnswered = true;
+
+            ACT2_PAIRS.forEach((pair, idx) => {
+                const val = document.getElementById(`act2Select${idx}`).value;
+                if (!val) allAnswered = false;
+                if (val !== pair.correct) correct = false;
+            });
+
+            const fb = document.getElementById('act2Feedback');
+            fb.classList.remove('hidden');
+
+            if (!allAnswered) {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-amber-100 text-amber-900 border border-amber-300";
+                fb.innerText = "⚠️ Harap pilih perubahan wujud untuk semua peristiwa!";
+                playSound('wrong');
+            } else if (correct) {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-emerald-100 text-emerald-900 border border-emerald-300";
+                fb.innerText = "🎉 Hebat! Semua pasangan perubahan wujud sudah cocok!";
+                playSound('correct');
+                markActivityDone(1);
+            } else {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-rose-100 text-rose-900 border border-rose-300";
+                fb.innerText = "❌ Masih ada pasangan yang belum cocok. Yuk diperiksa lagi!";
+                playSound('wrong');
+            }
+        }
+
+        // Activity 3: Image Scenario
+        let act3Selected = null;
+        function initActivity3() {
+            const container = document.getElementById('act3Options');
+            container.innerHTML = '';
+            const opts = ["Mencair", "Menguap", "Membeku", "Menyublim"];
+            opts.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-2.5 bg-slate-50 border-2 border-slate-200 hover:border-teal-400 rounded-xl font-bold text-xs text-left text-slate-800 transition active:scale-95";
+                btn.innerText = opt;
+                btn.onclick = () => {
+                    playSound('click');
+                    act3Selected = opt;
+                    Array.from(container.children).forEach(c => c.className = "w-full p-2.5 bg-slate-50 border-2 border-slate-200 hover:border-teal-400 rounded-xl font-bold text-xs text-left text-slate-800 transition active:scale-95");
+                    btn.className = "w-full p-2.5 bg-teal-100 border-2 border-teal-500 rounded-xl font-bold text-xs text-left text-teal-900 transition active:scale-95";
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function checkActivity3() {
+            const fb = document.getElementById('act3Feedback');
+            fb.classList.remove('hidden');
+
+            if (!act3Selected) {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-amber-100 text-amber-900 border border-amber-300";
+                fb.innerText = "⚠️ Silakan pilih salah satu jawaban terlebih dahulu!";
+                playSound('wrong');
+            } else if (act3Selected === "Menguap") {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-emerald-100 text-emerald-900 border border-emerald-300";
+                fb.innerText = "🎉 Tepat Sekali! Air panas mendidih berubah menjadi uap air (Menguap).";
+                playSound('correct');
+                markActivityDone(2);
+            } else {
+                fb.className = "p-3 rounded-2xl font-bold text-xs text-center bg-rose-100 text-rose-900 border border-rose-300";
+                fb.innerText = "❌ Belum tepat. Air yang berubah menjadi uap adalah proses Menguap.";
+                playSound('wrong');
+            }
+        }
+
+        // Activity 4: "Ayo Berpikir" HOTS
+        let act4Selected = null;
+        function initActivity4() {
+            const container = document.getElementById('act4Options');
+            container.innerHTML = '';
+            const opts = [
+                "Gas di dalam balon memuai (membesar volumenya) saat dipanaskan sehingga menekan dinding balon sampai meletus.",
+                "Balon meletus karena udara di dalamnya membeku menjadi es padat.",
+                "Karet balon dimakan oleh panas matahari."
+            ];
+
+            opts.forEach((optText, idx) => {
+                const btn = document.createElement('button');
+                btn.className = "w-full p-3 bg-white border-2 border-sky-200 hover:border-sky-400 rounded-xl font-bold text-xs text-left text-slate-800 transition active:scale-95";
+                btn.innerText = `${String.fromCharCode(65 + idx)}. ${optText}`;
+                btn.onclick = () => {
+                    playSound('click');
+                    act4Selected = idx;
+                    Array.from(container.children).forEach(c => c.className = "w-full p-3 bg-white border-2 border-sky-200 hover:border-sky-400 rounded-xl font-bold text-xs text-left text-slate-800 transition active:scale-95");
+                    btn.className = "w-full p-3 bg-sky-100 border-2 border-sky-500 rounded-xl font-bold text-xs text-left text-sky-900 transition active:scale-95";
+                };
+                container.appendChild(btn);
+            });
+        }
+
+        function checkActivity4() {
+            const fb = document.getElementById('act4Feedback');
+            fb.classList.remove('hidden');
+
+            if (act4Selected === null) {
+                fb.className = "p-4 rounded-2xl font-bold text-xs text-center bg-amber-100 text-amber-900 border border-amber-300";
+                fb.innerText = "⚠️ Pilih salah satu alasan ilmiah terlebih dahulu!";
+                playSound('wrong');
+            } else if (act4Selected === 0) {
+                fb.className = "p-4 rounded-2xl font-bold text-xs bg-emerald-100 text-emerald-900 border border-emerald-300 leading-relaxed";
+                fb.innerText = "💡 Pembahasan HOTS Sempurna! Udara (zat gas) di dalam balon akan memuai saat menerima panas matahari. Karena volumenya terus membesar dan menekan karet balon berlebihan, akhirnya balon tersebut meletus!";
+                playSound('correct');
+                markActivityDone(3);
+            } else {
+                fb.className = "p-4 rounded-2xl font-bold text-xs bg-rose-100 text-rose-900 border border-rose-300 leading-relaxed";
+                fb.innerText = "❌ Alasan tersebut belum tepat secara sains. Coba ingat sifat pemuaian gas saat menerima panas matahari!";
+                playSound('wrong');
+            }
+        }
+
+        function markActivityDone(index) {
+            appState.completedActivities[index] = true;
+            saveToLocalStorage();
+        }
+
+        // QUIZ EVALUATION ENGINE
+        function loadQuizQuestion(index) {
+            if (index < 0 || index >= QUIZ_DATA.length) return;
+            appState.currentQuizIdx = index;
+            const q = QUIZ_DATA[index];
+
+            document.getElementById('quizCurrentNum').innerText = index + 1;
+            document.getElementById('quizBadge').innerText = q.badge;
+            document.getElementById('quizQuestionText').innerText = q.question;
+
+            const percent = ((index + 1) / QUIZ_DATA.length) * 100;
+            document.getElementById('quizProgressBar').style.width = percent + '%';
+
+            const optContainer = document.getElementById('quizOptionsContainer');
+            optContainer.innerHTML = '';
+
+            q.options.forEach((optStr, optIdx) => {
+                const isSelected = (appState.quizAnswers[index] === optIdx);
+                const btn = document.createElement('button');
+                btn.className = `w-full p-4 rounded-2xl border-2 font-bold text-xs md:text-sm text-left transition transform active:scale-98 ${isSelected ? 'bg-amber-100 border-amber-500 text-amber-950 shadow-fun-sm' : 'bg-slate-50 border-slate-200 text-slate-800 hover:bg-amber-50/50 hover:border-amber-300'}`;
+                btn.innerText = optStr;
+                btn.onclick = () => {
+                    playSound('click');
+                    appState.quizAnswers[index] = optIdx;
+                    loadQuizQuestion(index);
+                };
+                optContainer.appendChild(btn);
+            });
+
+            document.getElementById('quizPrevBtn').disabled = (index === 0);
+            const nextBtn = document.getElementById('quizNextBtn');
+
+            if (index === QUIZ_DATA.length - 1) {
+                nextBtn.innerHTML = `<span>Selesai & Kirim</span> <i data-lucide="check-circle" class="w-4 h-4"></i>`;
+                nextBtn.className = "px-6 py-2.5 bg-emerald-500 hover:bg-emerald-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1 shadow-fun-sm transition";
+            } else {
+                nextBtn.innerHTML = `<span>Berikutnya</span> <i data-lucide="chevron-right" class="w-4 h-4"></i>`;
+                nextBtn.className = "px-6 py-2.5 bg-amber-500 hover:bg-amber-600 text-white font-extrabold rounded-xl text-xs flex items-center gap-1 shadow-fun-sm transition";
+            }
+            lucide.createIcons();
+        }
+
+        function prevQuizQuestion() {
+            if (appState.currentQuizIdx > 0) loadQuizQuestion(appState.currentQuizIdx - 1);
+        }
+
+        function nextQuizQuestion() {
+            if (appState.currentQuizIdx < QUIZ_DATA.length - 1) {
+                loadQuizQuestion(appState.currentQuizIdx + 1);
+            } else {
+                finishQuiz();
+            }
+        }
+
+        function finishQuiz() {
+            // Check if all answered
+            const unanswered = appState.quizAnswers.some(a => a === null);
+            if (unanswered) {
+                if (!confirm("Masih ada soal yang belum dijawab. Yakin ingin menyelesaikan kuis sekarang?")) {
+                    return;
+                }
+            }
+
+            let correctCount = 0;
+            QUIZ_DATA.forEach((q, idx) => {
+                if (appState.quizAnswers[idx] === q.correct) correctCount++;
+            });
+
+            const total = QUIZ_DATA.length;
+            const incorrectCount = total - correctCount;
+            const score = Math.round((correctCount / total) * 100);
+
+            let predicate = "Sangat Baik!";
+            if (score < 60) predicate = "Perlu Belajar Lagi";
+            else if (score < 80) predicate = "Cukup Baik!";
+
+            // Save History
+            const historyEntry = {
+                date: new Date().toLocaleDateString('id-ID'),
+                score: score,
+                correct: correctCount,
+                incorrect: incorrectCount,
+                predicate: predicate
+            };
+
+            appState.quizHistory.unshift(historyEntry);
+            saveToLocalStorage();
+
+            // Populate Modal
+            document.getElementById('quizModalStudentInfo').innerText = `Siswa: ${appState.studentName || 'Siswa'} | Kelas: ${appState.studentClass || 'Kelas 4'}`;
+            document.getElementById('quizModalScore').innerText = score;
+            document.getElementById('quizModalPredicate').innerText = predicate;
+            document.getElementById('quizModalCorrect').innerText = correctCount;
+            document.getElementById('quizModalIncorrect').innerText = incorrectCount;
+            document.getElementById('quizModalPercent').innerText = score + '%';
+
+            // Discussion Builder
+            buildDiscussionList();
+
+            playSound('correct');
+            document.getElementById('quizResultModal').classList.remove('hidden');
+            lucide.createIcons();
+        }
+
+        function buildDiscussionList() {
+            const container = document.getElementById('discussionContainer');
+            container.innerHTML = '';
+
+            QUIZ_DATA.forEach((q, idx) => {
+                const userAns = appState.quizAnswers[idx];
+                const isCorrect = (userAns === q.correct);
+
+                const item = document.createElement('div');
+                item.className = `p-3 rounded-xl border text-xs space-y-1 ${isCorrect ? 'bg-emerald-50 border-emerald-200' : 'bg-rose-50 border-rose-200'}`;
+                item.innerHTML = `
+                    <div class="font-extrabold text-slate-800">Soal ${idx + 1}: ${q.question}</div>
+                    <div class="font-bold ${isCorrect ? 'text-emerald-700' : 'text-rose-700'}">
+                        Jawaban Kamu: ${userAns !== null ? q.options[userAns] : 'Belum Dijawab'} ${isCorrect ? '✓' : '✗'}
+                    </div>
+                    ${!isCorrect ? `<div class="font-bold text-emerald-800">Jawaban Benar: ${q.options[q.correct]}</div>` : ''}
+                    <div class="text-slate-600 bg-white p-2 rounded-lg border border-slate-200 mt-1">
+                        <strong>Pembahasan:</strong> ${q.discussion}
+                    </div>
+                `;
+                container.appendChild(item);
+            });
+        }
+
+        function toggleDiscussionView() {
+            playSound('click');
+            const container = document.getElementById('discussionContainer');
+            const text = document.getElementById('discussionToggleText');
+            if (container.classList.contains('hidden')) {
+                container.classList.remove('hidden');
+                text.innerText = "Sembunyikan Pembahasan Soal";
+            } else {
+                container.classList.add('hidden');
+                text.innerText = "Tampilkan Pembahasan Soal Lengkap";
+            }
+        }
+
+        function retakeQuiz() {
+            appState.quizAnswers = new Array(10).fill(null);
+            document.getElementById('quizResultModal').classList.add('hidden');
+            document.getElementById('discussionContainer').classList.add('hidden');
+            document.getElementById('discussionToggleText').innerText = "Tampilkan Pembahasan Soal Lengkap";
+            loadQuizQuestion(0);
+        }
+
+        function closeQuizModalAndGoResult() {
+            document.getElementById('quizResultModal').classList.add('hidden');
+            navigateTo('hasil');
+        }
+
+        // HASIL BELAJAR PAGE ENGINE
+        function loadHasilPage() {
+            updateUserProfileUI();
+            document.getElementById('resMateriText').innerText = `${appState.completedMaterials.length}/12`;
+            const actDone = appState.completedActivities.filter(Boolean).length;
+            document.getElementById('resActivityText').innerText = `${actDone}/4`;
+
+            const historyContainer = document.getElementById('resQuizHistoryContainer');
+            historyContainer.innerHTML = '';
+
+            if (appState.quizHistory.length === 0) {
+                historyContainer.innerHTML = `
+                    <div class="p-6 text-center text-slate-500 bg-slate-50 rounded-2xl border border-dashed border-slate-300 text-xs font-semibold">
+                        Belum ada riwayat pengerjaan kuis. Silakan kerjakan kuis evaluasi terlebih dahulu!
+                    </div>
+                `;
+            } else {
+                appState.quizHistory.forEach((h, idx) => {
+                    const card = document.createElement('div');
+                    card.className = "p-4 bg-purple-50/60 border border-purple-200 rounded-2xl flex flex-col sm:flex-row justify-between items-start sm:items-center gap-2";
+                    card.innerHTML = `
+                        <div>
+                            <div class="text-xs font-bold text-purple-900">Percobaan Kuis #${appState.quizHistory.length - idx}</div>
+                            <div class="text-[11px] text-slate-500">${h.date} - Predikat: ${h.predicate}</div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <span class="text-xs font-bold text-slate-600">Benar: ${h.correct}/10</span>
+                            <span class="px-3 py-1 bg-purple-600 text-white font-extrabold text-sm rounded-xl">${h.score}</span>
+                        </div>
+                    `;
+                    historyContainer.appendChild(card);
+                });
+            }
+        }
+
+        function resetAllProgress() {
+            if (confirm("Apakah kamu yakin ingin menghapus seluruh progres belajar dan riwayat nilai kuis?")) {
+                appState.completedMaterials = [];
+                appState.completedActivities = [false, false, false, false];
+                appState.quizHistory = [];
+                appState.quizAnswers = new Array(10).fill(null);
+                saveToLocalStorage();
+                loadHasilPage();
+                updateDashboardProgress();
+                playSound('wrong');
+            }
+        }
+
+        // ON LOAD INITIALIZATION
+        window.onload = function() {
+            loadFromLocalStorage();
+            initMateriSelect();
+            updateUserProfileUI();
+            updateDashboardProgress();
+
+            if (appState.studentName) {
+                navigateTo('dashboard');
+            } else {
+                navigateTo('login');
+            }
+            lucide.createIcons();
+        };
+    </script>
+</body>
+</html>
